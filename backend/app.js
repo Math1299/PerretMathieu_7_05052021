@@ -6,7 +6,7 @@ const ratelimit = require("express-rate-limit"); //LIMITATION DES DEMANDES D ACC
 
 const limiter = ratelimit({
     windowMs: 5 * 60 * 1000,
-    max: 50,
+    max: 100,
     message: "Too many request from this IP",
 });
 
@@ -25,18 +25,18 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next) => {
-    res.json({ message: "Votre requête a bien été reçue !" });
-    next();
-});
+// app.use((req, res, next) => {
+//     res.json({ message: "Votre requête a bien été reçue !" });
+//     next();
+// });
 
 //METHODE D EXPRESS PERMETTANT DE TRANSFORMER LE CORPS DE LA REQUETE EN JSON UTILISABLE
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/api/auth", userRoutes); //IMPORT DES ROUTES DEPUIS LE CONTROLLER USER.JS
-app.use("/api/posts", postRoutes);
+app.use("/api/posts", postRoutes); // IMPORT DES ROUTES DEPUIS LE CONTROLLER POSTS.JS
 
 module.exports = app;
