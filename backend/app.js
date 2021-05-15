@@ -1,10 +1,8 @@
-require("dotenv").config(); //STOCK LES CONFIG D ENVIRONNEMENT HORS DU CODE
 const express = require("express");
 const bodyParser = require("body-parser");
 const helmet = require("helmet"); //PLUGIN DE PROTECTION DES HEADERS
 const path = require("path"); //POUR ACCEDER AU CHEMIN DE FICHIER
 const ratelimit = require("express-rate-limit"); //LIMITATION DES DEMANDES D ACCES REPETEES A L API
-const mysql = require("mysql"); //UTILISATION DE LA BASE DE DONNEES
 
 const limiter = ratelimit({
     windowMs: 5 * 60 * 1000,
@@ -14,6 +12,7 @@ const limiter = ratelimit({
 
 //IMPORT DE NOS ROUTERS
 const userRoutes = require("./routes/users");
+const postRoutes = require("./routes/posts");
 
 const app = express();
 app.use(helmet());
@@ -26,28 +25,18 @@ app.use((req, res, next) => {
     next();
 });
 
-//CONNECTION A LA BASE DE DONNEES
-let connectDb = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-});
-
-connectDb.connect(function (err) {
-    if (err) {
-        console.log("Erreur de connexion à la base de données", err);
-        return;
-    }
-    console.log("Connecté à la base de données");
+app.use((req, res, next) => {
+    res.json({ message: "Votre requête a bien été reçue !" });
+    next();
 });
 
 //METHODE D EXPRESS PERMETTANT DE TRANSFORMER LE CORPS DE LA REQUETE EN JSON UTILISABLE
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(limiter);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/api/auth", userRoutes); //IMPORT DES ROUTES DEPUIS LE CONTROLLER USER.JS
+app.use("/api/posts", postRoutes);
 
 module.exports = app;
