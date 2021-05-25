@@ -1,15 +1,16 @@
+//modules - router express
 const express = require("express");
 const router = express.Router();
 
-//ASSOCIATION LOGIQUE METIER AVEC LES DIFFERENTES ROUTES
+//association logique metier avec les différentes routes
 const userCtrl = require("../controllers/user");
 
-//IMPORTATION DES MIDDLEWARES DE VERIFICATION EMAIL ET MDP
+//importation des middlewares de vérificatioj email et mdp
 const passwordValidator = require("../middleware/password");
 const emailValidator = require("../middleware/email");
 const auth = require("../middleware/auth");
 
-//CREATION DES 2 ROUTES POST CAR LE FRONT VA AUSSI ENVOYER DES INFOS => EMAIL ET MDP
+//création de deux routes POST car le front va aussi envoyer des infos ==> email et mdp
 router.post("/signup", passwordValidator, emailValidator, userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.get("./", auth, userCtrl.myProfile);

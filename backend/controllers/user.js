@@ -1,35 +1,38 @@
-const bcrypt = require("bcrypt"); // PACKAGE DE CRYPTAGE DES MDP
-const jwt = require("jsonwebtoken"); //PACKAGE POUR ENCODER LES TOKENS
-// const maskemail = require("maskemail"); //PERMET DE MASQUER LES EMAILS DANS LA BD
-const mysql = require("mysql");
+const bcrypt = require("bcrypt"); //package de cryptage des mdp
+const jwt = require("jsonwebtoken"); //package pour encoder les tokens
+// const maskemail = require("maskemail"); //permet de masquer les emails dans la bd
+// const mysql = require("mysql");
+require("dotenv").config({ path: "./config/.env" }); //indique le chemin pour la variable d'environnement
 
 const User = require("../models/User");
 let user = new User();
 
-//MIDDLEWARE POUR L ENREGISTREMENT DE NOUVEAUX UTILISATEURS
+//middleware pour l'enregistrement de nouveaux utilisateurs
 exports.signup = (req, res, next) => {
+    console.log(req.body);
+    let lastName = req.body.lastName;
+    let firstName = req.body.firstName;
     let email = req.body.email;
     let password = req.body.password;
-    let firstName = req.body.firstName;
-    let lastName = req.body.lastName;
     bcrypt
         .hash(password, 10)
         .then((hash) => {
             let sqlInserts = [lastName, firstName, email, hash];
             user.signup(sqlInserts)
                 .then(() => {
-                    res.status(200).json({ message: "Utilisateur connecté" });
+                    res.status(200).json({ message: "Utilisateur créé " });
                 })
                 .catch((error) => {
+                    console.log(error);
                     res.status(400).json({ error });
                 });
         })
         .catch((error) => res.status(500).json({ error }));
 };
 
-//MIDDLEWARE POUR CONNECTER LES UTILISATEURS EXISTANTS
+//middleware pour connecter les utilisateurs existants
 exports.login = (req, res, next) => {
-    let email = req.body.email;
+    let email = req.body.email; //on récupère email et mdp afin de vérfier la correspondance
     let password = req.body.password;
     let sqlInserts = [email];
     user.login(sqlInserts, password)
@@ -41,7 +44,7 @@ exports.login = (req, res, next) => {
         });
 };
 
-//MIDDLEWARE POUR VISUALISER LES UTILISATEURS EXISTANTS
+//middleware pour visualiser les utilisateurs existants
 exports.myProfile = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_KEY);
@@ -56,7 +59,7 @@ exports.myProfile = (req, res, next) => {
         });
 };
 
-//MIDDLEWARE POUR MODIFIER LES UTILISATEURS EXISTANTS
+//middleware pour modifier les utilisateurs existants
 exports.updateUser = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_KEY);
@@ -74,7 +77,7 @@ exports.updateUser = (req, res, next) => {
         });
 };
 
-//MIDDLEWARE POUR EFFACER LES UTILISATEURS EXISTANTS
+//middleware pour effacer un utilisateur existant
 exports.deleteUser = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_KEY);

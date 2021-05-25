@@ -1,7 +1,7 @@
-require("dotenv").config(); //STOCK LES CONFIG D ENVIRONNEMENT HORS DU CODE
-const mysql = require("mysql"); //UTILISATION DE LA BASE DE DONNEES
+require("dotenv").config({ path: "./config/.env" }); //indique le chemin pour la variable d'environnement
+const mysql = require("mysql"); //utilisation de la base de données
 
-//CONNECTION A LA BASE DE DONNEES
+//connection à la base de données
 let connectDb = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

@@ -1,8 +1,8 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const helmet = require("helmet"); //PLUGIN DE PROTECTION DES HEADERS
-const path = require("path"); //POUR ACCEDER AU CHEMIN DE FICHIER
-const ratelimit = require("express-rate-limit"); //LIMITATION DES DEMANDES D ACCES REPETEES A L API
+// const bodyParser = require("body-parser");
+const helmet = require("helmet"); //plugin de protection des headers
+const path = require("path"); //permet d'accéder au chemin des fichiers
+const ratelimit = require("express-rate-limit"); //limitation des demandes d'accès répétées à l'API
 
 const limiter = ratelimit({
     windowMs: 5 * 60 * 1000,
@@ -10,14 +10,14 @@ const limiter = ratelimit({
     message: "Too many request from this IP",
 });
 
-//IMPORT DE NOS ROUTERS
+//importation de nos routers
 const userRoutes = require("./routes/users");
 const postRoutes = require("./routes/posts");
 
 const app = express();
 app.use(helmet());
 
-//MIDDLEWARE GENERAL POUR EVITER LES PB DE CORS
+//middleware général pour éviter les pb de CORS
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
@@ -25,18 +25,21 @@ app.use((req, res, next) => {
     next();
 });
 
+// TEST
 // app.use((req, res, next) => {
 //     res.json({ message: "Votre requête a bien été reçue !" });
 //     next();
 // });
 
-//METHODE D EXPRESS PERMETTANT DE TRANSFORMER LE CORPS DE LA REQUETE EN JSON UTILISABLE
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//méthodes d'express permettant de transformer le corps de la requête en JSON utilisable
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(limiter);
+
+//nos routes
 app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/api/user", userRoutes); //import des routes utilisateurs depuis le controller user.js
+app.use("/api/posts", postRoutes); //import des routes posts depuis le controller posts.js
 
-app.use("/api/auth", userRoutes); //IMPORT DES ROUTES DEPUIS LE CONTROLLER USER.JS
-app.use("/api/posts", postRoutes); // IMPORT DES ROUTES DEPUIS LE CONTROLLER POSTS.JS
-
+//export de l'app
 module.exports = app;

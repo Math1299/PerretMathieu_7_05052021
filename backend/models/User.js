@@ -2,11 +2,12 @@ const mysql = require("mysql");
 const connectDb = require("../connectDb");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: "./config/.env" }); //indique le chemin pour la variable d'environnement
 
-class UserModels {
+class User {
     constructor() {}
     signup(sqlInserts) {
-        let sql = "INSERT INTO users VALUES(NULL,?, ?, ?, ?, NULL)";
+        let sql = "INSERT INTO users VALUES(NULL, ?, ?, ?, ?, NULL)";
         sql = mysql.format(sql, sqlInserts);
         return new Promise((resolve, reject) => {
             connectDb.query(sql, function (err, result) {
@@ -73,4 +74,4 @@ class UserModels {
     }
 }
 
-module.exports = UserModels;
+module.exports = User;
