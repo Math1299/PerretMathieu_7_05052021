@@ -39,7 +39,7 @@ app.use(limiter);
 //nos routes
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/user", userRoutes); //import des routes utilisateurs depuis le controller user.js
-app.use("/api/posts", postRoutes); //import des routes posts depuis le controller posts.js
+app.use("/api/post", postRoutes); //import des routes posts depuis le controller posts.js
 
 //export de l'app
 module.exports = app;

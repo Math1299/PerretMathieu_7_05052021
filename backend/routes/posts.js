@@ -1,24 +1,30 @@
+//modules - router express
 const express = require("express");
 const router = express.Router();
 
-//ASSOCIATION LOGIQUE METIER AVEC LES DIFFERENTES ROUTES
+//association logique metier avec les différentes routes
 const postsCtrl = require("../controllers/posts");
 
-//IMPORTATION DES MIDDLEWARES AUTH
+//importation des middlewares de vérification
 const auth = require("../middleware/auth");
+const multer = require("../middleware/multer-config");
 
 //POSTS
-router.get("/", auth, postsCtrl.getAllPosts);
-router.post("/", auth, postsCtrl.createPost);
-router.put("/:id", auth, postsCtrl.updatePost);
-router.delete("/:id", auth, postsCtrl.deletePost);
-//LIKES
-router.get("/likes", auth, postsCtrl.getAllLikes);
-router.get("/:id/likes", auth, postsCtrl.postLike);
-//COMMENTS
-router.get("/:id/comments", auth, postsCtrl.getComments);
-router.post("/:id/comments", auth, postsCtrl.createComment);
-router.put("/comments/:id", auth, postsCtrl.updateComment);
-router.delete("/comments/:id", auth, postsCtrl.deleteComment);
+try {
+    router.get("/", auth, postsCtrl.getAllPosts);
+    router.post("/", auth, postsCtrl.createPost);
+    // router.put("/:id", auth, postsCtrl.updatePost);
+    // router.delete("/:id", auth, postsCtrl.deletePost);
+    // //LIKES
+    // router.get("/likes", auth, postsCtrl.getAllLikes);
+    // router.get("/:id/likes", auth, postsCtrl.postLike);
+    // //COMMENTS
+    // router.get("/:id/comments", auth, postsCtrl.getComments);
+    // router.post("/:id/comments", auth, postsCtrl.createComment);
+    // router.put("/:id/comments", auth, postsCtrl.updateComment);
+    // router.delete("/:id/comments", auth, postsCtrl.deleteComment);
+} catch (error) {
+    console.log(error);
+}
 
 module.exports = router;

@@ -1,21 +1,23 @@
 const multer = require("multer");
 
-//DICTIONNAIRE POUR LES EXTENSIONS DES IMAGES
+//dictionnaire pour les extensions des images
 const MIME_TYPES = {
     "images/jpg": "jpg",
     "images/jpeg": "jpg",
     "images/png": "png",
 };
 
-//LA CONST STORAGE EST PASSEE A MULTER COMME CONFIG AVEC LA LOGIQUE D ENREGISTREMENT
+//la const storage est passée à MULTER comme config avec la logique d'enregistrement
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
+        //destination de l'enregistrement des fichiers
         callback(null, "images");
     },
     filename: (req, res, callback) => {
-        const name = file.originalname.split(" ").join("_"); //REMPLACE ESPACE PAR UNDERSCORE
-        const extension = MIME_TYPES[file.mimetype];
-        callback(null, name + Date.now() + "." + extension);
+        //le nom du fichier
+        const name = file.originalname.split(" ").join("_"); //remplace les espaces par des _
+        const extension = MIME_TYPES[file.mimetype]; //défini le type
+        callback(null, name + Date.now() + "." + extension); //création du nom complet du fichier
     },
 });
 
