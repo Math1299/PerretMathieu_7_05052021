@@ -88,6 +88,7 @@ exports.update = (req, res, next) => {
     const lastName = req.body.lastName;
     const firstName = req.body.firstName;
     const email = req.body.email;
+
     // const password = req.body.password;
 
     let sqlUpdateUser = " UPDATE users SET firstName = ?, lastName = ?, email = ? WHERE id = ?";

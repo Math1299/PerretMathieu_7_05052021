@@ -13,16 +13,16 @@ const multer = require("../middleware/multer-config");
 try {
     router.get("/", auth, postsCtrl.getAllPosts);
     router.post("/", auth, postsCtrl.createPost);
-    // router.put("/:id", auth, postsCtrl.updatePost);
-    // router.delete("/:id", auth, postsCtrl.deletePost);
+    router.put("/:id/update", auth, postsCtrl.updatePost);
+    router.delete("/:id/delete", auth, postsCtrl.deletePost);
+    // //COMMENTS
+    router.get("/comments", auth, postsCtrl.getAllComments); //VOIR SI PAS MIEUX /:id/comments pour getComments
+    router.post("/:id/comments", auth, postsCtrl.createComment);
+    // router.put("/:id/comments", auth, postsCtrl.updateComment);
+    // router.delete("/:id/comments", auth, postsCtrl.deleteComment);
     // //LIKES
     // router.get("/likes", auth, postsCtrl.getAllLikes);
     // router.get("/:id/likes", auth, postsCtrl.postLike);
-    // //COMMENTS
-    // router.get("/:id/comments", auth, postsCtrl.getComments);
-    // router.post("/:id/comments", auth, postsCtrl.createComment);
-    // router.put("/:id/comments", auth, postsCtrl.updateComment);
-    // router.delete("/:id/comments", auth, postsCtrl.deleteComment);
 } catch (error) {
     console.log(error);
 }
