@@ -101,8 +101,8 @@ exports.getAllComments = (req, res, next) => {
 //middleware pour créer un commentaire
 
 exports.createComment = (req, res, next) => {
+    let userId = req.params.id;
     let postId = req.params.id;
-    let userId = req.body.userId;
     let content = req.body.comContent;
 
     let sqlCreateComments;
